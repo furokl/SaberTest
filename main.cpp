@@ -1,12 +1,10 @@
 ﻿/*
 * Created by Logunov on 22/02/23
 * Техническое задание №1
-* @comment: Ниже текст задания.
 */
 
 #include "ListRand.h"
 #include <fstream>
-#include <cstdlib>
 
 int main()
 {
