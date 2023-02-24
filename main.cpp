@@ -4,35 +4,6 @@
 * @comment: Ниже текст задания.
 */
 
-/*
-* Реализуйте функции сериализации и десериализации двусвязного списка, заданного следующим образом:
-* class ListNode 
-* {
-*   public ListNode Prev;
-*   public ListNode Next;
-*   public ListNode Rand; // произвольный элемент внутри списка
-*   public string Data;
-* }
-* class ListRand
-* {
-*   public ListNode Head;
-*   public ListNode Tail;
-*   public int Count;
-* 
-*   public void Serialize(FileStream s)
-*   {
-*   }
-* 
-*   public void Deserialize(FileStream s)
-*   {
-*   }
-* }
-* 
-* #Примечание:
-*   Cериализация подразумевает сохранение и восстановление полной структуры списка, включая 
-*      взаимное соотношение его элементов между собой — в том числе ссылок на Rand элементы.
-*/
-
 #include "ListRand.h"
 #include <fstream>
 #include <cstdlib>
