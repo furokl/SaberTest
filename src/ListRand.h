@@ -23,7 +23,14 @@ public:
     {
         clear();
     }
-
+    ListRand(const ListRand &list)
+        : m_head(nullptr),
+          m_tail(nullptr),
+          m_count{}
+    {
+        deep_copy(list);
+    }
+    ListRand &operator= (const ListRand &list);
     ListNode *operator[] (int index) { return get_node(index); }
 
     friend std::ostream &operator<< (std::ostream &out, ListRand &list);
@@ -33,6 +40,7 @@ public:
     void pop_back();
     ListNode *get_node(int index) const;
     ListNode *insert(int index, std::string data);
+    void deep_copy(const ListRand &list);
     void clear(int index);
     void clear();
     void set_rand_ref(int index_from, int index_to);

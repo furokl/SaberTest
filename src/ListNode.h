@@ -2,7 +2,7 @@
 #define LISTNODE_H
 
 #include <string>
-
+#include <iostream>
 // @comment: Ёлемент списка
 class ListNode
 {
@@ -19,6 +19,16 @@ public:
           m_rand(nullptr)
     {
     }
+
+    ~ListNode() 
+    {
+    }
+
+    ListNode(const ListNode &) = delete;
+    ListNode &operator= (const ListNode &) = delete;
+
+    ListNode(ListNode &&) = delete;
+    ListNode &operator= (ListNode &&) = delete;
 };
 
 #endif // !LISTNODE_H

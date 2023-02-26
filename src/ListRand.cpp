@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <cassert>
 
+// @comment: operator<<
 std::ostream &operator<< (std::ostream &out, ListRand &list) {
     if (list.m_head == nullptr || list.m_tail == nullptr) return out;
     ListNode *begin = list.m_head;
@@ -13,10 +14,22 @@ std::ostream &operator<< (std::ostream &out, ListRand &list) {
     return out;
 }
 
+// @comment: operator=
+ListRand& ListRand::operator= (const ListRand &list) {
+	if (this == &list) return *this;
+
+    clear();
+    deep_copy(list);
+
+    return *this;
+}
+
 // @comment: Добавление элемента в начало списка
 ListNode* ListRand::push_front(std::string data)
 {
-    auto *ptr = new ListNode(data);
+    auto *ptr = new (std::nothrow) ListNode(data);
+    assert(ptr != nullptr);
+
     ptr->m_next = m_head;
 
     if (m_head != nullptr) m_head->m_prev = ptr;
@@ -31,7 +44,9 @@ ListNode* ListRand::push_front(std::string data)
 // @comment: Добавление элемента в конец списка
 ListNode* ListRand::push_back(std::string data)
 {
-    auto *ptr = new ListNode(data);
+    auto *ptr = new (std::nothrow) ListNode(data);
+    assert(ptr != nullptr);
+
     ptr->m_prev = m_tail;
 
     if (m_head == nullptr) m_head = ptr;
@@ -96,15 +111,31 @@ ListNode* ListRand::insert(int index, std::string data) {
     ListNode *left = right->m_prev;
     if (left == nullptr) return push_front(data);
 
-    auto *ptr = new ListNode(data);
+    auto *ptr = new (std::nothrow) ListNode(data);
+    assert(ptr != nullptr);
+
     ptr->m_next = right;
     ptr->m_prev = left;
-
     right->m_prev = ptr;
     left->m_next = ptr;
 
     ++m_count;
     return ptr;
+}
+
+// @comment: Глубокое копирование
+void ListRand::deep_copy(const ListRand &list) {
+    std::unordered_map<ListNode *, int> map;
+
+    ListNode *old_node = list.m_head;
+    for (int pos{}; old_node != nullptr; ++pos, old_node = old_node->m_next)
+    {
+        ListNode *new_node = push_back(old_node->m_data);
+        if (old_node->m_rand != nullptr)
+            map.insert(std::make_pair(new_node, pos));
+    }
+    for (auto &el : map)
+        el.first->m_rand = get_node(el.second);
 }
 
 // @comment: Удалить элемент списка по индексу
@@ -135,7 +166,8 @@ void ListRand::clear() {
 
 // @comment: Установить связь между элементами
 void ListRand::set_rand_ref(int index_from, int index_to) {
-    get_node(index_from)->m_rand = get_node(index_to);
+    ListNode *to = get_node(index_to);
+    if (to != nullptr) get_node(index_from)->m_rand = get_node(index_to);
 }
 
 // @comment: Очистить связь между элементами
@@ -168,7 +200,7 @@ void ListRand::serialize(std::ostream& out) const {
         ptr = ptr->m_next;
     }
 
-    assert(!(out.fail() || out.bad()), "Serialize error");
+    assert(!(out.fail() || out.bad()));
 }
 
 // _______________________________________________
@@ -179,8 +211,10 @@ void ListRand::deserialize(std::istream &in) {
     ListNode *ptr;
     std::string data;
     int pos;
+    int count;
 
-    in >> m_count;
+    in >> count;
+
     while (!in.eof())
     {
         in >> data;
@@ -194,5 +228,6 @@ void ListRand::deserialize(std::istream &in) {
     for (auto &el : map)
         el.first->m_rand = get_node(el.second);
 
-    assert(!(in.fail() || in.bad()), "Deserialize error");
+    assert(!(in.fail() || in.bad()));
+    assert(count == m_count);
 }
