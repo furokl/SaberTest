@@ -32,13 +32,14 @@ public:
     }
     ListRand &operator= (const ListRand &list);
     ListNode *operator[] (int index) { return get_node(index); }
-
     friend std::ostream &operator<< (std::ostream &out, ListRand &list);
+
     ListNode *push_front(std::string data);
     ListNode *push_back(std::string data);
     void pop_front();
     void pop_back();
     ListNode *get_node(int index) const;
+    int get_index(ListNode *head, ListNode *find) const;
     ListNode *insert(int index, std::string data);
     void deep_copy(const ListRand &list);
     void clear(int index);

@@ -1,7 +1,6 @@
 #include "ListRand.h"
 #include <unordered_map>
 #include <cassert>
-#include <queue>
 
 // @comment: operator<<
 std::ostream &operator<< (std::ostream &out, ListRand &list) {
@@ -25,7 +24,7 @@ ListRand& ListRand::operator= (const ListRand &list) {
     return *this;
 }
 
-// @comment: Добавление элемента в начало списка
+// @comment: Добавление узла в начало списка
 ListNode* ListRand::push_front(std::string data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
@@ -42,7 +41,7 @@ ListNode* ListRand::push_front(std::string data)
     return ptr;
 }
 
-// @comment: Добавление элемента в конец списка
+// @comment: Добавление узла в конец списка
 ListNode* ListRand::push_back(std::string data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
@@ -59,7 +58,7 @@ ListNode* ListRand::push_back(std::string data)
     return ptr;
 }
 
-// @comment: Удаление элемента из начала списка
+// @comment: Удаление узла из начала списка
 void ListRand::pop_front()
 {
     if (m_head == nullptr) return;
@@ -75,7 +74,7 @@ void ListRand::pop_front()
     --m_count;
 }
 
-// @comment: Удаление элемента из конца списка
+// @comment: Удаление узла из конца списка
 void ListRand::pop_back()
 {
     if (m_tail == nullptr) return;
@@ -91,7 +90,7 @@ void ListRand::pop_back()
     --m_count;
 }
 
-// @comment: Вернуть элемент списка по индексу
+// @comment: Вернуть узел по индексу
 ListNode* ListRand::get_node(int index) const {
     if (index > m_count) return nullptr;
 
@@ -104,7 +103,15 @@ ListNode* ListRand::get_node(int index) const {
     return ptr;
 }
 
-// @comment: Вставить элемент списка по индексу
+// @comment: Вернуть индекс по узлу (с указанием головы)
+int ListRand::get_index(ListNode *head, ListNode *find) const{
+    for (int i{}; head != nullptr; head = head->m_next, ++i)
+        if (head == find) return i;
+
+    return -1;
+}
+
+// @comment: Вставить узел по индексу
 ListNode* ListRand::insert(int index, std::string data) {
     ListNode *right = get_node(index);
     if (right == nullptr) return push_back(data);
@@ -126,20 +133,26 @@ ListNode* ListRand::insert(int index, std::string data) {
 
 // @comment: Глубокое копирование
 void ListRand::deep_copy(const ListRand &list) {
-    std::unordered_map<ListNode *, int> map;
+    std::unordered_map<int, ListNode *> map;
 
     ListNode *old_node = list.m_head;
-    for (int pos{}; old_node != nullptr; ++pos, old_node = old_node->m_next)
+    while (m_count != list.m_count)
     {
-        ListNode *new_node = push_back(old_node->m_data);
-        if (old_node->m_rand != nullptr)
-            map.insert(std::make_pair(new_node, pos));
+        push_back(old_node->m_data);
+
+        if (old_node->m_rand != nullptr) {
+            map.insert(std::make_pair(m_count - 1, old_node->m_rand));
+        }
+
+        old_node = old_node->m_next;
     }
+    
     for (auto &el : map)
-        el.first->m_rand = get_node(el.second);
+        get_node(el.first)->m_rand = get_node(
+            get_index(list.m_head, el.second));
 }
 
-// @comment: Удалить элемент списка по индексу
+// @comment: Удалить узел по индексу
 void ListRand::clear(int index) {
     ListNode *ptr = get_node(index);
     if (ptr == nullptr) return;
@@ -165,13 +178,13 @@ void ListRand::clear() {
     }
 }
 
-// @comment: Установить связь между элементами
+// @comment: Установить дополнительную связь узлу
 void ListRand::set_rand_ref(int index_from, int index_to) {
     ListNode *to = get_node(index_to);
     if (to != nullptr) get_node(index_from)->m_rand = get_node(index_to);
 }
 
-// @comment: Очистить связь между элементами
+// @comment: Очистить дополнительную связь узла
 void ListRand::clear_rand_ref(ListNode* node) {
     for (ListNode *ptr(m_head); ptr != nullptr; ptr = ptr->m_next)
     {
@@ -209,21 +222,21 @@ void ListRand::serialize(std::ostream& out) const {
 // _______________________________________________
 void ListRand::deserialize(std::istream &in) {
     std::unordered_map<ListNode *, int> map;
-    std::vector<ListNode *> node;
+    std::vector<ListNode *> list_rand;
     std::string data;
     ListNode *ptr;
 
     {
         int count;
         in >> count;
-        node.reserve(count);
+        list_rand.reserve(std::move(count));
     }
 
     while (!in.eof())
     {
         in >> data;
         ptr = push_back(data);
-        node.push_back(std::move(ptr));
+        list_rand.push_back(std::move(ptr));
 
         int pos;
         in >> pos;
@@ -232,8 +245,8 @@ void ListRand::deserialize(std::istream &in) {
     }
     
     assert(!(in.fail() || in.bad()));
-    assert(node.size() == m_count);
+    assert(list_rand.size() == m_count);
 
     for (auto &el : map)
-        el.first->m_rand = node[el.second];
+        el.first->m_rand = list_rand[el.second];
 }

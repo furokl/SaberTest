@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-// @comment: Элемент списка
+// @comment: Узел списка
 class ListNode
 {
 public:
