@@ -208,38 +208,32 @@ void ListRand::serialize(std::ostream& out) const {
 //  Deserialize
 // _______________________________________________
 void ListRand::deserialize(std::istream &in) {
-    std::queue<int> pos;
-    std::vector<ListNode *> rand;
+    std::unordered_map<ListNode *, int> map;
+    std::vector<ListNode *> node;
     std::string data;
     ListNode *ptr;
 
     {
         int count;
         in >> count;
-        rand.reserve(count);
+        node.reserve(count);
     }
 
     while (!in.eof())
     {
         in >> data;
         ptr = push_back(data);
-        rand.push_back(std::move(ptr));
+        node.push_back(std::move(ptr));
 
-        int temp_pos;
-        in >> temp_pos;
-        pos.push(temp_pos);
+        int pos;
+        in >> pos;
+        if (pos != cnst::null_rand)
+            map.insert(std::make_pair(ptr, std::move(pos)));
     }
     
     assert(!(in.fail() || in.bad()));
-    assert(
-        rand.size() == pos.size() &&
-        rand.size() == m_count &&
-        pos.size() == m_count);
+    assert(node.size() == m_count);
 
-    for (auto &node : rand)
-    {
-        if (pos.front() != cnst::null_rand)
-            node->m_rand = rand[pos.front()];
-        pos.pop();
-    }
+    for (auto &el : map)
+        el.first->m_rand = node[el.second];
 }
