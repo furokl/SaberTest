@@ -5,7 +5,7 @@
 #include "Constants.h"
 #include <iostream>
 
-// @comment: Список
+// @comment: РЎРїРёСЃРѕРє
 class ListRand
 {
 public:

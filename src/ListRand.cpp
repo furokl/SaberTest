@@ -24,7 +24,7 @@ ListRand& ListRand::operator= (const ListRand &list) {
     return *this;
 }
 
-// @comment: Добавление элемента в начало списка
+// @comment: Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РІ РЅР°С‡Р°Р»Рѕ СЃРїРёСЃРєР°
 ListNode* ListRand::push_front(std::string data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
@@ -41,7 +41,7 @@ ListNode* ListRand::push_front(std::string data)
     return ptr;
 }
 
-// @comment: Добавление элемента в конец списка
+// @comment: Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РІ РєРѕРЅРµС† СЃРїРёСЃРєР°
 ListNode* ListRand::push_back(std::string data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
@@ -58,7 +58,7 @@ ListNode* ListRand::push_back(std::string data)
     return ptr;
 }
 
-// @comment: Удаление элемента из начала списка
+// @comment: РЈРґР°Р»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РёР· РЅР°С‡Р°Р»Р° СЃРїРёСЃРєР°
 void ListRand::pop_front()
 {
     if (m_head == nullptr) return;
@@ -74,7 +74,7 @@ void ListRand::pop_front()
     --m_count;
 }
 
-// @comment: Удаление элемента из конца списка
+// @comment: РЈРґР°Р»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р° РёР· РєРѕРЅС†Р° СЃРїРёСЃРєР°
 void ListRand::pop_back()
 {
     if (m_tail == nullptr) return;
@@ -90,7 +90,7 @@ void ListRand::pop_back()
     --m_count;
 }
 
-// @comment: Вернуть элемент списка по индексу
+// @comment: Р’РµСЂРЅСѓС‚СЊ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° РїРѕ РёРЅРґРµРєСЃСѓ
 ListNode* ListRand::get_node(int index) const {
     if (index > m_count) return nullptr;
 
@@ -103,7 +103,7 @@ ListNode* ListRand::get_node(int index) const {
     return ptr;
 }
 
-// @comment: Вставить элемент списка по индексу
+// @comment: Р’СЃС‚Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° РїРѕ РёРЅРґРµРєСЃСѓ
 ListNode* ListRand::insert(int index, std::string data) {
     ListNode *right = get_node(index);
     if (right == nullptr) return push_back(data);
@@ -123,7 +123,7 @@ ListNode* ListRand::insert(int index, std::string data) {
     return ptr;
 }
 
-// @comment: Глубокое копирование
+// @comment: Р“Р»СѓР±РѕРєРѕРµ РєРѕРїРёСЂРѕРІР°РЅРёРµ
 void ListRand::deep_copy(const ListRand &list) {
     std::unordered_map<ListNode *, int> map;
 
@@ -138,7 +138,7 @@ void ListRand::deep_copy(const ListRand &list) {
         el.first->m_rand = get_node(el.second);
 }
 
-// @comment: Удалить элемент списка по индексу
+// @comment: РЈРґР°Р»РёС‚СЊ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° РїРѕ РёРЅРґРµРєСЃСѓ
 void ListRand::clear(int index) {
     ListNode *ptr = get_node(index);
     if (ptr == nullptr) return;
@@ -156,7 +156,7 @@ void ListRand::clear(int index) {
     --m_count;
 }
 
-// @comment: Очистка списка
+// @comment: РћС‡РёСЃС‚РєР° СЃРїРёСЃРєР°
 void ListRand::clear() {
     while (m_tail != nullptr)
     {
@@ -164,13 +164,13 @@ void ListRand::clear() {
     }
 }
 
-// @comment: Установить связь между элементами
+// @comment: РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІСЏР·СЊ РјРµР¶РґСѓ СЌР»РµРјРµРЅС‚Р°РјРё
 void ListRand::set_rand_ref(int index_from, int index_to) {
     ListNode *to = get_node(index_to);
     if (to != nullptr) get_node(index_from)->m_rand = get_node(index_to);
 }
 
-// @comment: Очистить связь между элементами
+// @comment: РћС‡РёСЃС‚РёС‚СЊ СЃРІСЏР·СЊ РјРµР¶РґСѓ СЌР»РµРјРµРЅС‚Р°РјРё
 void ListRand::clear_rand_ref(ListNode* node) {
     for (ListNode *ptr(m_head); ptr != nullptr; ptr = ptr->m_next)
     {
