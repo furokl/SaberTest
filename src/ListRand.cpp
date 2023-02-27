@@ -1,6 +1,7 @@
 #include "ListRand.h"
 #include <unordered_map>
 #include <cassert>
+#include <queue>
 
 // @comment: operator<<
 std::ostream &operator<< (std::ostream &out, ListRand &list) {
@@ -207,27 +208,38 @@ void ListRand::serialize(std::ostream& out) const {
 //  Deserialize
 // _______________________________________________
 void ListRand::deserialize(std::istream &in) {
-    std::unordered_map<ListNode *, int> map;
-    ListNode *ptr;
+    std::queue<int> pos;
+    std::vector<ListNode *> rand;
     std::string data;
-    int pos;
-    int count;
+    ListNode *ptr;
 
-    in >> count;
+    {
+        int count;
+        in >> count;
+        rand.reserve(count);
+    }
 
     while (!in.eof())
     {
         in >> data;
         ptr = push_back(data);
+        rand.push_back(std::move(ptr));
 
-        in >> pos;
-        if (pos != -1) 
-            map.insert(std::make_pair(ptr, pos));
+        int temp_pos;
+        in >> temp_pos;
+        pos.push(temp_pos);
     }
-
-    for (auto &el : map)
-        el.first->m_rand = get_node(el.second);
-
+    
     assert(!(in.fail() || in.bad()));
-    assert(count == m_count);
+    assert(
+        rand.size() == pos.size() &&
+        rand.size() == m_count &&
+        pos.size() == m_count);
+
+    for (auto &node : rand)
+    {
+        if (pos.front() != cnst::null_rand)
+            node->m_rand = rand[pos.front()];
+        pos.pop();
+    }
 }
