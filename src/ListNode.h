@@ -2,7 +2,6 @@
 #define LISTNODE_H
 
 #include <string>
-#include <iostream>
 
 // @comment: Узел списка
 class ListNode
