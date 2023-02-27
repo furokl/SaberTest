@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+
 // @comment: Ёлемент списка
 class ListNode
 {

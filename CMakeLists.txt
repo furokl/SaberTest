@@ -10,6 +10,7 @@ set(SOURCES
 	src/ListRand.h 
 	src/ListRand.cpp)
 
+add_definitions(-DUNICODE -D_UNICODE)
 project(${PROJECT_NAME} CXX)
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
