@@ -28,7 +28,7 @@ ListRand& ListRand::operator= (const ListRand &list) {
 ListNode *ListRand::push_front(const std::string &data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
-    assert(ptr != nullptr);
+    if (ptr == nullptr) return nullptr;
 
     ptr->m_next = m_head;
 
@@ -45,7 +45,7 @@ ListNode *ListRand::push_front(const std::string &data)
 ListNode *ListRand::push_back(const std::string &data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
-    assert(ptr != nullptr);
+    if (ptr == nullptr) return nullptr;
 
     ptr->m_prev = m_tail;
 
@@ -120,7 +120,7 @@ ListNode* ListRand::insert(const int &index, const std::string &data) {
     if (left == nullptr) return push_front(data);
 
     auto *ptr = new (std::nothrow) ListNode(data);
-    assert(ptr != nullptr);
+    if (ptr == nullptr) return nullptr;
 
     ptr->m_next = right;
     ptr->m_prev = left;
