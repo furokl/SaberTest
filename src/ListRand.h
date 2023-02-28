@@ -31,24 +31,34 @@ public:
         deep_copy(list);
     }
     ListRand &operator= (const ListRand &list);
-    ListNode *operator[] (int index) { return get_node(index); }
+    ListNode *operator[] (const int &index) const { return get_node(index); }
     friend std::ostream &operator<< (std::ostream &out, ListRand &list);
 
-    ListNode *push_front(std::string data);
-    ListNode *push_back(std::string data);
+    ListNode *push_front(const std::string &data);
+    ListNode *push_back(const std::string &data);
     void pop_front();
     void pop_back();
-    ListNode *get_node(int index) const;
+    ListNode *get_node(const int &index) const;
     int get_index(ListNode *head, ListNode *find) const;
-    ListNode *insert(int index, std::string data);
+    ListNode *insert(const int &index, const std::string &data);
     void deep_copy(const ListRand &list);
-    void clear(int index);
+    void clear(const int &index);
     void clear();
-    void set_rand_ref(int index_from, int index_to);
+    void set_rand_ref(const int &index_from, const int &index_to);
     void clear_rand_ref(ListNode *node);
 
     void serialize(std::ostream &out) const;
     void deserialize(std::istream &in);
+
+
+
+    ListNode *operator[] (const int &&index) const { return get_node(index); }
+    ListNode *get_node(const int &&index) const { return get_node(index); };
+    void clear(const int &&index) { clear(index); };
+    void set_rand_ref(const int &&index_from, const int &&index_to) { set_rand_ref(index_from, index_to); };
+    ListNode *insert(const int &&index, const std::string &&data) { return insert(index, data); };
+    ListNode *push_front(const std::string &&data) { return push_front(data); }
+    ListNode *push_back(const std::string &&data) { return push_back(data); }
 };
 
 #endif // !LISTRAND_H

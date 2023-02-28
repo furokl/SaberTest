@@ -25,7 +25,7 @@ ListRand& ListRand::operator= (const ListRand &list) {
 }
 
 // @comment: Добавление узла в начало списка
-ListNode* ListRand::push_front(std::string data)
+ListNode *ListRand::push_front(const std::string &data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
     assert(ptr != nullptr);
@@ -42,7 +42,7 @@ ListNode* ListRand::push_front(std::string data)
 }
 
 // @comment: Добавление узла в конец списка
-ListNode* ListRand::push_back(std::string data)
+ListNode *ListRand::push_back(const std::string &data)
 {
     auto *ptr = new (std::nothrow) ListNode(data);
     assert(ptr != nullptr);
@@ -91,7 +91,7 @@ void ListRand::pop_back()
 }
 
 // @comment: Вернуть узел по индексу
-ListNode* ListRand::get_node(int index) const {
+ListNode* ListRand::get_node(const int &index) const {
     if (index > m_count) return nullptr;
 
     ListNode *ptr = m_head;
@@ -112,7 +112,7 @@ int ListRand::get_index(ListNode *head, ListNode *find) const{
 }
 
 // @comment: Вставить узел по индексу
-ListNode* ListRand::insert(int index, std::string data) {
+ListNode* ListRand::insert(const int &index, const std::string &data) {
     ListNode *right = get_node(index);
     if (right == nullptr) return push_back(data);
 
@@ -135,25 +135,23 @@ ListNode* ListRand::insert(int index, std::string data) {
 void ListRand::deep_copy(const ListRand &list) {
     std::unordered_map<int, ListNode *> map;
 
-    ListNode *old_node = list.m_head;
+    ListNode *ptr = list.m_head;
     while (m_count != list.m_count)
     {
-        push_back(old_node->m_data);
+        if (ptr->m_rand != nullptr)
+            map.insert(std::make_pair(m_count, ptr->m_rand));
 
-        if (old_node->m_rand != nullptr) {
-            map.insert(std::make_pair(m_count - 1, old_node->m_rand));
-        }
-
-        old_node = old_node->m_next;
+        push_back(ptr->m_data);
+        ptr = ptr->m_next;
     }
     
-    for (auto &el : map)
+    for (auto &el : map) //
         get_node(el.first)->m_rand = get_node(
             get_index(list.m_head, el.second));
 }
 
 // @comment: Удалить узел по индексу
-void ListRand::clear(int index) {
+void ListRand::clear(const int &index) {
     ListNode *ptr = get_node(index);
     if (ptr == nullptr) return;
     if (m_tail == ptr) { pop_back(); return; }
@@ -179,7 +177,7 @@ void ListRand::clear() {
 }
 
 // @comment: Установить дополнительную связь узлу
-void ListRand::set_rand_ref(int index_from, int index_to) {
+void ListRand::set_rand_ref(const int &index_from, const int &index_to) {
     ListNode *to = get_node(index_to);
     if (to != nullptr) get_node(index_from)->m_rand = get_node(index_to);
 }
